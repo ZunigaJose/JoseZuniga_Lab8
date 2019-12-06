@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -382,11 +383,11 @@ public class Principal extends javax.swing.JFrame {
         jdMensajes.getContentPane().setLayout(jdMensajesLayout);
         jdMensajesLayout.setHorizontalGroup(
             jdMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 454, Short.MAX_VALUE)
         );
         jdMensajesLayout.setVerticalGroup(
             jdMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 334, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jdLlamadasLayout = new javax.swing.GroupLayout(jdLlamadas.getContentPane());
@@ -467,6 +468,14 @@ public class Principal extends javax.swing.JFrame {
             Contactos contact = new Contactos(nombre, correo, direccion, edad, numero);
             contactos.set(modContBox.getSelectedIndex(), contact);
             //llenarcombo
+            base.conectar();
+            try {
+                base.query.execute("UPDATE Contactos  Set NumeroTelefonico = '" + contact.getNumero()  + "',Nombre ="
+                        + "'" + contact.getNombre() + "',Correo = '" + contact.getCorreo() + "',Direccion = '" + contact.getDireccion() + "', Edad = '" + contact.getEdad() + "'"
+                                + " WHERE NumeroTelefonico = " + "'" + ((Contactos)modContBox.getSelectedItem()).getNumero() + "'");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             jTabbedPane1.setSelectedIndex(0);
         }
     }//GEN-LAST:event_modContModActionPerformed
@@ -489,8 +498,9 @@ public class Principal extends javax.swing.JFrame {
         creaContNumero.setText("");
         base.conectar();
         try {
-            base.query.execute("INSERT INTO Contactos VALUES (" + cont.getNumero() + ",'" + cont.getNombre() + "'"
-                    + ",'" + cont.getCorreo() + "','" + cont.getDireccion() + "'," + cont.getEdad() + ")");
+            base.query.execute("INSERT INTO Contactos (NumeroTelefonico,Nombre,Correo,Direccion,Edad) VALUES ('" + cont.getNumero() + "','" + cont.getNombre() + "'"
+                    + ",'" + cont.getCorreo() + "','" + cont.getDireccion() + "','" + cont.getEdad() + "')");
+            base.commit();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(jdContactos, "Error Fatal!");
             e.printStackTrace();
@@ -500,19 +510,40 @@ public class Principal extends javax.swing.JFrame {
 
     private void modContBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_modContBoxItemStateChanged
         if (modContBox.getSelectedIndex() >= 0) {
+            System.out.println(modContBox.getSelectedIndex());
             Contactos contact = (Contactos) modContBox.getSelectedItem();
             modContCorreo.setText(contact.getCorreo());
             modContDire.setText(contact.getDireccion());
             modContEdad.setValue(contact.getEdad());
             modContNombre.setText(contact.getNombre());
             modContNumero.setText(String.valueOf(contact.getNumero()));
-            llenarCombo();
         }
     }//GEN-LAST:event_modContBoxItemStateChanged
 
     private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
         if (jTabbedPane1.getSelectedIndex() == 1) {
             modContBox.setSelectedIndex(-1);
+        } else if (jTabbedPane1.getSelectedIndex() == 3) {
+            contTabla.setModel(new javax.swing.table.DefaultTableModel(
+                    new Object[][]{},
+                    new String[]{
+                        "Numero", "Nombre", "Edad", "Correo", "Direccion"
+                    }
+            ) {
+                boolean[] canEdit = new boolean[]{
+                    false, false, false, false, false
+                };
+
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit[columnIndex];
+                }
+            });
+            DefaultTableModel modelo = (DefaultTableModel) contTabla.getModel();
+            for (Contactos contacto : contactos) {
+               Object arr[] = new Object[]{contacto.getNumero(), contacto.getNombre(), contacto.getEdad(), contacto.getCorreo(), contacto.getDireccion()};
+               modelo.addRow(arr);
+            }
+            contTabla.setModel(modelo);
         }
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
@@ -558,7 +589,7 @@ public class Principal extends javax.swing.JFrame {
             base.query.execute("select * from Contactos");
             ResultSet rs = base.query.getResultSet();
             while (rs.next()) {
-                Contactos cont = new Contactos(rs.getString("Nombre"), rs.getString("Correo"), rs.getString("Direccion"), rs.getInt("Edad"), rs.getInt("Numero Telefonico"));
+                Contactos cont = new Contactos(rs.getString("Nombre"), rs.getString("Correo"), rs.getString("Direccion"), rs.getInt("Edad"), rs.getInt("NumeroTelefonico"));
                 contactos.add(cont);
             }
         } catch (SQLException ex) {
