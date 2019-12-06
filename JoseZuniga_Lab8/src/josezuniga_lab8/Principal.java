@@ -74,6 +74,12 @@ public class Principal extends javax.swing.JFrame {
         contTabla = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jdMensajes = new javax.swing.JDialog();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        mesajetxt = new javax.swing.JTextArea();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        mensaBox = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
         jdLlamadas = new javax.swing.JDialog();
         jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -379,15 +385,54 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        mesajetxt.setColumns(20);
+        mesajetxt.setRows(5);
+        jScrollPane2.setViewportView(mesajetxt);
+
+        jLabel15.setText("Mensaje:");
+
+        jLabel16.setText("Destinatario:");
+
+        jButton1.setText("Enviar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jdMensajesLayout = new javax.swing.GroupLayout(jdMensajes.getContentPane());
         jdMensajes.getContentPane().setLayout(jdMensajesLayout);
         jdMensajesLayout.setHorizontalGroup(
             jdMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 454, Short.MAX_VALUE)
+            .addGroup(jdMensajesLayout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addGroup(jdMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jdMensajesLayout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addGap(27, 27, 27)
+                        .addComponent(mensaBox, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
+                .addContainerGap(185, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jdMensajesLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(51, 51, 51))
         );
         jdMensajesLayout.setVerticalGroup(
             jdMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 334, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jdMensajesLayout.createSequentialGroup()
+                .addContainerGap(72, Short.MAX_VALUE)
+                .addGroup(jdMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(mensaBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(46, 46, 46)
+                .addComponent(jLabel15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(87, 87, 87)
+                .addComponent(jButton1)
+                .addGap(23, 23, 23))
         );
 
         javax.swing.GroupLayout jdLlamadasLayout = new javax.swing.GroupLayout(jdLlamadas.getContentPane());
@@ -415,6 +460,11 @@ public class Principal extends javax.swing.JFrame {
         jMenuBar1.add(menuContactos);
 
         menuMensajes.setText("Mensajes");
+        menuMensajes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuMensajesMouseClicked(evt);
+            }
+        });
         jMenuBar1.add(menuMensajes);
 
         menuLlamadas.setText("Llamadas");
@@ -547,6 +597,30 @@ public class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (mensaBox.getSelectedIndex() >= 0 && !mesajetxt.getText().equals("")) {
+            Mesaje mensaje = new Mesaje("Jose Zuniga", ((Contactos)mensaBox.getSelectedItem()).getNombre(), mesajetxt.getText());
+            base.conectar();
+            try {
+                base.query.execute("INSERT INTO Mensajes (Emisor,Receptor,Mensaje,Fecha) VALUES "
+                        + "('" + mensaje.getEmisor() + "','" + mensaje.getReceptor() + "','" + mensaje.getContenido() + "','"
+                                + "" + mensaje.getFecha() +"')");
+                base.commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            base.desconectar();
+            mesajetxt.setText("");
+            mensaBox.setSelectedIndex(-1);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void menuMensajesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuMensajesMouseClicked
+        jdMensajes.pack();
+        jdMensajes.setLocationRelativeTo(this);
+        jdMensajes.setVisible(true);
+    }//GEN-LAST:event_menuMensajesMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -606,6 +680,7 @@ public class Principal extends javax.swing.JFrame {
         }
         modContBox.setModel(modelo);
         eliContBox.setModel(modelo);
+        mensaBox.setModel(modelo);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -618,12 +693,15 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField creaContNombre;
     private javax.swing.JFormattedTextField creaContNumero;
     private javax.swing.JComboBox<String> eliContBox;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -638,13 +716,16 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JDialog jdContactos;
     private javax.swing.JDialog jdLlamadas;
     private javax.swing.JDialog jdMensajes;
+    private javax.swing.JComboBox<String> mensaBox;
     private javax.swing.JMenu menuContactos;
     private javax.swing.JMenu menuLlamadas;
     private javax.swing.JMenu menuMensajes;
+    private javax.swing.JTextArea mesajetxt;
     private javax.swing.JComboBox<String> modContBox;
     private javax.swing.JTextField modContCorreo;
     private javax.swing.JTextField modContDire;
