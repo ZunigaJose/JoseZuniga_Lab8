@@ -8,6 +8,7 @@ package josezuniga_lab8;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +27,9 @@ public class Principal extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         llenadoContactos();
         llenarCombo();
+        colgar.setVisible(false);
+        tiempoTrans.setVisible(false);
+        tiempolabel.setVisible(false);
     }
 
     /**
@@ -81,6 +85,12 @@ public class Principal extends javax.swing.JFrame {
         mensaBox = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jdLlamadas = new javax.swing.JDialog();
+        jLabel17 = new javax.swing.JLabel();
+        llamaBox = new javax.swing.JComboBox<>();
+        llamar = new javax.swing.JButton();
+        colgar = new javax.swing.JButton();
+        tiempolabel = new javax.swing.JLabel();
+        tiempoTrans = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuContactos = new javax.swing.JMenu();
@@ -435,15 +445,69 @@ public class Principal extends javax.swing.JFrame {
                 .addGap(23, 23, 23))
         );
 
+        jLabel17.setText("Contacto");
+
+        llamar.setBackground(new java.awt.Color(0, 255, 0));
+        llamar.setText("Llamar");
+        llamar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                llamarActionPerformed(evt);
+            }
+        });
+
+        colgar.setBackground(new java.awt.Color(255, 0, 0));
+        colgar.setText("Colgar");
+        colgar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                colgarActionPerformed(evt);
+            }
+        });
+
+        tiempolabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tiempolabel.setText("Tiempo:");
+
+        tiempoTrans.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tiempoTrans.setText("jLabel19");
+
         javax.swing.GroupLayout jdLlamadasLayout = new javax.swing.GroupLayout(jdLlamadas.getContentPane());
         jdLlamadas.getContentPane().setLayout(jdLlamadasLayout);
         jdLlamadasLayout.setHorizontalGroup(
             jdLlamadasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(jdLlamadasLayout.createSequentialGroup()
+                .addGroup(jdLlamadasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jdLlamadasLayout.createSequentialGroup()
+                        .addGap(148, 148, 148)
+                        .addGroup(jdLlamadasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(colgar)
+                            .addComponent(llamar)))
+                    .addGroup(jdLlamadasLayout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel17)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jdLlamadasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jdLlamadasLayout.createSequentialGroup()
+                                .addComponent(tiempolabel)
+                                .addGap(70, 70, 70)
+                                .addComponent(tiempoTrans))
+                            .addComponent(llamaBox, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(164, Short.MAX_VALUE))
         );
         jdLlamadasLayout.setVerticalGroup(
             jdLlamadasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(jdLlamadasLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(jdLlamadasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(llamaBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(61, 61, 61)
+                .addComponent(llamar)
+                .addGap(37, 37, 37)
+                .addComponent(colgar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addGroup(jdLlamadasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tiempolabel)
+                    .addComponent(tiempoTrans))
+                .addGap(72, 72, 72))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -468,6 +532,11 @@ public class Principal extends javax.swing.JFrame {
         jMenuBar1.add(menuMensajes);
 
         menuLlamadas.setText("Llamadas");
+        menuLlamadas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuLlamadasMouseClicked(evt);
+            }
+        });
         jMenuBar1.add(menuLlamadas);
 
         setJMenuBar(jMenuBar1);
@@ -621,6 +690,30 @@ public class Principal extends javax.swing.JFrame {
         jdMensajes.setVisible(true);
     }//GEN-LAST:event_menuMensajesMouseClicked
 
+    private void menuLlamadasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuLlamadasMouseClicked
+        jdLlamadas.pack();
+        jdLlamadas.setLocationRelativeTo(this);
+        jdLlamadas.setVisible(true);
+    }//GEN-LAST:event_menuLlamadasMouseClicked
+
+    private void llamarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_llamarActionPerformed
+        if (llamaBox.getSelectedIndex() >= 0) {
+            llamar.setEnabled(false);
+            colgar.setVisible(true);
+            tiempoTrans.setVisible(true);
+            tiempolabel.setVisible(true);
+            hilo = new HiloLlamada(tiempoTrans, new Date());
+            proceso1 = new Thread(hilo);
+            proceso1.start();
+            llamar.setEnabled(false);
+        }
+    }//GEN-LAST:event_llamarActionPerformed
+
+    private void colgarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colgarActionPerformed
+        hilo.setVive(false);
+        
+    }//GEN-LAST:event_colgarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -681,9 +774,11 @@ public class Principal extends javax.swing.JFrame {
         modContBox.setModel(modelo);
         eliContBox.setModel(modelo);
         mensaBox.setModel(modelo);
+        llamaBox.setModel(modelo);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton colgar;
     private javax.swing.JButton contEliminar;
     private javax.swing.JTable contTabla;
     private javax.swing.JTextField creaContCorreo;
@@ -702,6 +797,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -721,6 +817,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JDialog jdContactos;
     private javax.swing.JDialog jdLlamadas;
     private javax.swing.JDialog jdMensajes;
+    private javax.swing.JComboBox<String> llamaBox;
+    private javax.swing.JButton llamar;
     private javax.swing.JComboBox<String> mensaBox;
     private javax.swing.JMenu menuContactos;
     private javax.swing.JMenu menuLlamadas;
@@ -733,7 +831,11 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton modContMod;
     private javax.swing.JTextField modContNombre;
     private javax.swing.JFormattedTextField modContNumero;
+    private javax.swing.JLabel tiempoTrans;
+    private javax.swing.JLabel tiempolabel;
     // End of variables declaration//GEN-END:variables
     private ArrayList<Contactos> contactos = new ArrayList<>();
     private Dba base = new Dba("./Lab8.mdb");
+    HiloLlamada hilo = new HiloLlamada(tiempoTrans, new Date());
+     Thread proceso1;
 }
