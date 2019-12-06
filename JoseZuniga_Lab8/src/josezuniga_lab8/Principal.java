@@ -5,6 +5,12 @@
  */
 package josezuniga_lab8;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author josez
@@ -16,6 +22,9 @@ public class Principal extends javax.swing.JFrame {
      */
     public Principal() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        llenadoContactos();
+        llenarCombo();
     }
 
     /**
@@ -53,6 +62,8 @@ public class Principal extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         modContEdad = new javax.swing.JSpinner();
         modContNombre = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        modContBox = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         eliContBox = new javax.swing.JComboBox<>();
         jLabel13 = new javax.swing.JLabel();
@@ -69,6 +80,12 @@ public class Principal extends javax.swing.JFrame {
         menuMensajes = new javax.swing.JMenu();
         menuLlamadas = new javax.swing.JMenu();
 
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
+            }
+        });
+
         jLabel3.setText("Nombre");
 
         jLabel4.setText("Edad");
@@ -79,13 +96,22 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel7.setText("Direccion");
 
+        creaContEdad.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+
         creaContDire.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 creaContDireActionPerformed(evt);
             }
         });
 
+        creaContNumero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
         creaContCrea.setText("Crear");
+        creaContCrea.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                creaContCreaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -147,7 +173,7 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(creaContDire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(82, 82, 82)
                 .addComponent(creaContCrea)
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addContainerGap(103, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(" Agregar", jPanel1);
@@ -175,6 +201,16 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel12.setText("Direccion");
 
+        modContEdad.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+
+        jLabel14.setText("Contacto");
+
+        modContBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                modContBoxItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -182,38 +218,47 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(48, 48, 48)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(jLabel11)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(modContCorreo))
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel8)
-                                        .addComponent(jLabel9))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(modContEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(modContNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(modContDire, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(modContNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(270, 270, 270)
-                        .addComponent(modContMod)))
+                        .addComponent(modContMod))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jLabel14))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(48, 48, 48)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(modContBox, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel11)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(modContCorreo))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel8)
+                                            .addComponent(jLabel9))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(modContEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(modContNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addComponent(jLabel12)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(modContDire, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addComponent(jLabel10)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(modContNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(288, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(63, 63, 63)
+                .addGap(28, 28, 28)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(modContBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(modContNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -235,12 +280,10 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(modContDire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(82, 82, 82)
                 .addComponent(modContMod)
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Modificar", jPanel2);
-
-        eliContBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel13.setText("Contacto");
 
@@ -254,8 +297,8 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap(161, Short.MAX_VALUE)
                 .addComponent(jLabel13)
                 .addGap(48, 48, 48)
-                .addComponent(eliContBox, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(263, 263, 263))
+                .addComponent(eliContBox, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(214, 214, 214))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(242, 242, 242)
                 .addComponent(contEliminar)
@@ -270,7 +313,7 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(jLabel13))
                 .addGap(78, 78, 78)
                 .addComponent(contEliminar)
-                .addContainerGap(220, Short.MAX_VALUE))
+                .addContainerGap(217, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Eliminar", jPanel3);
@@ -303,7 +346,7 @@ public class Principal extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -399,7 +442,9 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuContactosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuContactosMouseClicked
-        
+        jdContactos.pack();
+        jdContactos.setLocationRelativeTo(this);
+        jdContactos.setVisible(true);
     }//GEN-LAST:event_menuContactosMouseClicked
 
     private void creaContDireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creaContDireActionPerformed
@@ -411,8 +456,65 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_modContDireActionPerformed
 
     private void modContModActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modContModActionPerformed
-        
+        if (modContBox.getSelectedIndex() >= 0) {
+            String nombre, correo, direccion;
+            int edad, numero;
+            nombre = modContNombre.getText();
+            correo = modContCorreo.getText();
+            direccion = modContDire.getText();
+            edad = Integer.parseInt(modContEdad.getValue().toString());
+            numero = Integer.parseInt(modContNumero.getText());
+            Contactos contact = new Contactos(nombre, correo, direccion, edad, numero);
+            contactos.set(modContBox.getSelectedIndex(), contact);
+            //llenarcombo
+            jTabbedPane1.setSelectedIndex(0);
+        }
     }//GEN-LAST:event_modContModActionPerformed
+
+    private void creaContCreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creaContCreaActionPerformed
+        String nombre, correo, direccion;
+        int edad, numero;
+        nombre = creaContNombre.getText();
+        correo = creaContCorreo.getText();
+        direccion = creaContDire.getText();
+        edad = Integer.parseInt(creaContEdad.getValue().toString());
+        numero = Integer.parseInt(creaContNumero.getText());
+        Contactos cont = new Contactos(nombre, correo, direccion, edad, numero);
+        contactos.add(cont);
+        llenarCombo();
+        creaContCorreo.setText("");
+        creaContDire.setText("");
+        creaContEdad.setValue(0);
+        creaContNombre.setText("");
+        creaContNumero.setText("");
+        base.conectar();
+        try {
+            base.query.execute("INSERT INTO Contactos VALUES (" + cont.getNumero() + ",'" + cont.getNombre() + "'"
+                    + ",'" + cont.getCorreo() + "','" + cont.getDireccion() + "'," + cont.getEdad() + ")");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(jdContactos, "Error Fatal!");
+            e.printStackTrace();
+        }
+        base.desconectar();
+    }//GEN-LAST:event_creaContCreaActionPerformed
+
+    private void modContBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_modContBoxItemStateChanged
+        if (modContBox.getSelectedIndex() >= 0) {
+            Contactos contact = (Contactos) modContBox.getSelectedItem();
+            modContCorreo.setText(contact.getCorreo());
+            modContDire.setText(contact.getDireccion());
+            modContEdad.setValue(contact.getEdad());
+            modContNombre.setText(contact.getNombre());
+            modContNumero.setText(String.valueOf(contact.getNumero()));
+            llenarCombo();
+        }
+    }//GEN-LAST:event_modContBoxItemStateChanged
+
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+        if (jTabbedPane1.getSelectedIndex() == 1) {
+            modContBox.setSelectedIndex(-1);
+        }
+    }//GEN-LAST:event_jTabbedPane1StateChanged
 
     /**
      * @param args the command line arguments
@@ -449,6 +551,32 @@ public class Principal extends javax.swing.JFrame {
         });
     }
 
+    public void llenadoContactos() {
+        contactos = new ArrayList<>();
+        base.conectar();
+        try {
+            base.query.execute("select * from Contactos");
+            ResultSet rs = base.query.getResultSet();
+            while (rs.next()) {
+                Contactos cont = new Contactos(rs.getString("Nombre"), rs.getString("Correo"), rs.getString("Direccion"), rs.getInt("Edad"), rs.getInt("Numero Telefonico"));
+                contactos.add(cont);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        base.desconectar();
+
+    }
+
+    public void llenarCombo(){
+        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+        for (Contactos contacto : contactos) {
+            modelo.addElement(contacto);
+        }
+        modContBox.setModel(modelo);
+        eliContBox.setModel(modelo);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton contEliminar;
     private javax.swing.JTable contTabla;
@@ -464,6 +592,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -485,6 +614,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu menuContactos;
     private javax.swing.JMenu menuLlamadas;
     private javax.swing.JMenu menuMensajes;
+    private javax.swing.JComboBox<String> modContBox;
     private javax.swing.JTextField modContCorreo;
     private javax.swing.JTextField modContDire;
     private javax.swing.JSpinner modContEdad;
@@ -492,4 +622,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField modContNombre;
     private javax.swing.JFormattedTextField modContNumero;
     // End of variables declaration//GEN-END:variables
+    private ArrayList<Contactos> contactos = new ArrayList<>();
+    private Dba base = new Dba("./Lab8.mdb");
 }
