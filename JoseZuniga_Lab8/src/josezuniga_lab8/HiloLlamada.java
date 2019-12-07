@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 
 public class HiloLlamada implements Runnable {
     private JLabel label;
+    private Llamadas llamada;
     private Date inicio;
     private boolean vive;
     private boolean reset;
@@ -18,6 +19,14 @@ public class HiloLlamada implements Runnable {
         reset = true;
     }
 
+    public Llamadas getLlamada() {
+        return llamada;
+    }
+
+    public void setLlamada(Llamadas llamada) {
+        this.llamada = llamada;
+    }
+    
     public boolean isVive() {
         return vive;
     }
@@ -55,7 +64,9 @@ public class HiloLlamada implements Runnable {
                 minutos = 0;
                 horas++;
             }
-            label.setText(horas + ":" + minutos + ":" + segundos);
+            String x = (horas + ":" + minutos + ":" + segundos);
+            label.setText(x);
+            llamada.setDuracion(x);
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {

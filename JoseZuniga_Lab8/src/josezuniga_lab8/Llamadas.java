@@ -48,4 +48,11 @@ public class Llamadas {
         SimpleDateFormat sr  = new SimpleDateFormat("MM/dd/yyyy");
         this.fecha = sr.format(new Date());
     }
+    
+    
+
+    @Override
+    public String toString() {
+        return "Llamadas{" + "duracion=" + duracion + ", emisor=" + emisor + ", receptor=" + receptor + ", fecha=" + fecha + '}';
+    }
 }

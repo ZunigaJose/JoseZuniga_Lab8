@@ -91,6 +91,10 @@ public class Principal extends javax.swing.JFrame {
         colgar = new javax.swing.JButton();
         tiempolabel = new javax.swing.JLabel();
         tiempoTrans = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        jDialog1 = new javax.swing.JDialog();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuContactos = new javax.swing.JMenu();
@@ -305,6 +309,11 @@ public class Principal extends javax.swing.JFrame {
         jLabel13.setText("Contacto");
 
         contEliminar.setText("Eliminar");
+        contEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contEliminarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -469,6 +478,13 @@ public class Principal extends javax.swing.JFrame {
         tiempoTrans.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tiempoTrans.setText("jLabel19");
 
+        jButton2.setText("Registros");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jdLlamadasLayout = new javax.swing.GroupLayout(jdLlamadas.getContentPane());
         jdLlamadas.getContentPane().setLayout(jdLlamadasLayout);
         jdLlamadasLayout.setHorizontalGroup(
@@ -482,14 +498,17 @@ public class Principal extends javax.swing.JFrame {
                             .addComponent(llamar)))
                     .addGroup(jdLlamadasLayout.createSequentialGroup()
                         .addGap(22, 22, 22)
-                        .addComponent(jLabel17)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jdLlamadasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jdLlamadasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton2)
                             .addGroup(jdLlamadasLayout.createSequentialGroup()
-                                .addComponent(tiempolabel)
-                                .addGap(70, 70, 70)
-                                .addComponent(tiempoTrans))
-                            .addComponent(llamaBox, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jdLlamadasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jdLlamadasLayout.createSequentialGroup()
+                                        .addComponent(tiempolabel)
+                                        .addGap(70, 70, 70)
+                                        .addComponent(tiempoTrans))
+                                    .addComponent(llamaBox, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(164, Short.MAX_VALUE))
         );
         jdLlamadasLayout.setVerticalGroup(
@@ -507,7 +526,27 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(jdLlamadasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tiempolabel)
                     .addComponent(tiempoTrans))
-                .addGap(72, 72, 72))
+                .addGap(38, 38, 38)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane3.setViewportView(jTextArea1);
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog1Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -702,7 +741,9 @@ public class Principal extends javax.swing.JFrame {
             colgar.setVisible(true);
             tiempoTrans.setVisible(true);
             tiempolabel.setVisible(true);
+            Llamadas llamada = new Llamadas("", "Jose Zuniga", ((Contactos)llamaBox.getSelectedItem()).getNombre());
             hilo = new HiloLlamada(tiempoTrans, new Date());
+            hilo.setLlamada(llamada);
             proceso1 = new Thread(hilo);
             proceso1.start();
             llamar.setEnabled(false);
@@ -711,8 +752,26 @@ public class Principal extends javax.swing.JFrame {
 
     private void colgarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colgarActionPerformed
         hilo.setVive(false);
-        
+        llamar.setEnabled(true);
+        jTextArea1.append(hilo.getLlamada().toString());
     }//GEN-LAST:event_colgarActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        jDialog1.pack();
+        jDialog1.setLocationRelativeTo(jdLlamadas);
+        jDialog1.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void contEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contEliminarActionPerformed
+        if (eliContBox.getSelectedIndex() >= 0) {
+            contactos.remove(eliContBox.getSelectedIndex());
+            base.conectar();
+            try {
+                base.query.execute("DELTE FROM Contactos where NumeroTelefonico = '" + ((Contactos)eliContBox.getSelectedItem()).getNumero() + "'");
+            } catch (Exception e) {
+            }
+        }
+    }//GEN-LAST:event_contEliminarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -789,6 +848,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField creaContNumero;
     private javax.swing.JComboBox<String> eliContBox;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -813,7 +874,9 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JDialog jdContactos;
     private javax.swing.JDialog jdLlamadas;
     private javax.swing.JDialog jdMensajes;
