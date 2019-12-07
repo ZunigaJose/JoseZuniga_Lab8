@@ -768,8 +768,10 @@ public class Principal extends javax.swing.JFrame {
             base.conectar();
             try {
                 base.query.execute("DELTE FROM Contactos where NumeroTelefonico = '" + ((Contactos)eliContBox.getSelectedItem()).getNumero() + "'");
+                base.commit();
             } catch (Exception e) {
             }
+            base.desconectar();
         }
     }//GEN-LAST:event_contEliminarActionPerformed
 
